@@ -34,7 +34,7 @@ useEffect(() => {
         "type":"header",
            "text":{
               "type":"plain_text",
-              "text": "What is the problem?"
+              "text": "What is the problem? "
             }
       },
       {
@@ -151,10 +151,40 @@ useEffect(() => {
           {
             "type":"rich_text_section",
             "elements":[
+              ...divider
+            ]
+          }
+        ]
+      },
+      {
+        "type":"rich_text",
+        "elements":[
+          {
+            "type":"rich_text_section",
+            "elements":[
               {
                 "type":"link",
                 "url":formData.zoomLink
               }
+            ]
+          }
+        ]
+      },
+      
+      {
+        "type":"header",
+           "text":{
+              "type":"plain_text",
+              "text": "Code Block "
+            }
+      },
+      {
+        "type":"rich_text",
+        "elements":[
+          {
+            "type":"rich_text_section",
+            "elements":[
+              ...divider
             ]
           }
         ]
