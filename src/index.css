@@ -6,7 +6,7 @@
 }
 
 body {
-  width:500px;
+  width:600px;
   border:1px solid black;
   display:flex;
   justify-content: center;
@@ -27,10 +27,16 @@ button {
 textarea {
   height:75px;
   width:350px;
+  padding:0.5rem;
+  border:2px solid gray;
+  border-radius:5px;
 }
 
 input {
   width:350px;
+  height:30px;
+  border:2px solid gray;
+  border-radius:5px;
 }
 
 h1 {
@@ -38,7 +44,13 @@ h1 {
   margin-bottom:1rem;
 }
 
-.main-form {
+label {
+  font-size:1.15rem;
+  font-weight: bold;
+  border-radius:5px;
+}
+
+#main-form {
   display:flex;
   flex-direction: column;
   align-items: center;
