@@ -1,8 +1,10 @@
 import { useEffect,useState } from 'react'
+import populateSlackMarkup from './helpers';
 
 function App() {
 
-  const [formData,setFormData] = useState(null);
+  const [ formData, setFormData ] = useState(null);
+  const { createProblemBlock } = populateSlackMarkup()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -19,191 +21,15 @@ function App() {
 
 useEffect(() => {
   if(!formData) return;
-  const divider = new Array(25).fill(null).map(entry => {
-    entry = {
-      "type":"text",
-      "text":"=",
-      "style":{"bold":true}
-    }
-    return entry
-  })
 
   const body = {
     "blocks":[
-      {
-        "type":"header",
-           "text":{
-              "type":"plain_text",
-              "text": "What is the problem? "
-            }
-      },
-      {
-        "type":"rich_text",
-        "elements":[
-          {
-            "type":"rich_text_section",
-            "elements":[
-              ...divider
-            ]
-          }
-        ]
-      },
-      {
-        "type":"section",
-        "fields":[
-          {
-            "type":"mrkdwn",
-            "text":formData.problem
-          }
-        ]
-      },
-      {
-        "type":"header",
-           "text":{
-              "type":"plain_text",
-              "text": "What did I expect to happen?"
-            }
-      },
-      {
-        "type":"rich_text",
-        "elements":[
-          {
-            "type":"rich_text_section",
-            "elements":[
-              ...divider
-            ]
-          }
-        ]
-      },
-      {
-        "type":"section",
-        "fields":[
-          {
-            "type":"mrkdwn",
-            "text":formData.expected
-          }
-        ]
-      },
-      {
-        "type":"header",
-           "text":{
-              "type":"plain_text",
-              "text": "What have I already tried?"
-            }
-      },
-      {
-        "type":"rich_text",
-        "elements":[
-          {
-            "type":"rich_text_section",
-            "elements":[
-              ...divider
-            ]
-          }
-        ]
-      },
-      {
-        "type":"section",
-        "fields":[
-          {
-            "type":"mrkdwn",
-            "text":formData.tried
-          }
-        ]
-      },
-      {
-        "type":"header",
-           "text":{
-              "type":"plain_text",
-              "text": "Why I suspect its not working"
-            }
-      },
-      {
-        "type":"section",
-        "fields":[
-          {
-            "type":"mrkdwn",
-            "text":formData.suspect
-          }
-        ]
-      },
-      {
-        "type":"rich_text",
-        "elements":[
-          {
-            "type":"rich_text_section",
-            "elements":[
-              ...divider
-            ]
-          }
-        ]
-      },
-      {
-        "type":"header",
-           "text":{
-              "type":"plain_text",
-              "text": "Zoom Link"
-            }
-      },
-      {
-        "type":"rich_text",
-        "elements":[
-          {
-            "type":"rich_text_section",
-            "elements":[
-              ...divider
-            ]
-          }
-        ]
-      },
-      {
-        "type":"rich_text",
-        "elements":[
-          {
-            "type":"rich_text_section",
-            "elements":[
-              {
-                "type":"link",
-                "url":formData.zoomLink
-              }
-            ]
-          }
-        ]
-      },
-      
-      {
-        "type":"header",
-           "text":{
-              "type":"plain_text",
-              "text": "Code Block "
-            }
-      },
-      {
-        "type":"rich_text",
-        "elements":[
-          {
-            "type":"rich_text_section",
-            "elements":[
-              ...divider
-            ]
-          }
-        ]
-      },
-      {
-        "type":"rich_text",
-        "elements":[
-          {
-            "type":"rich_text_preformatted",
-            "elements":[
-              {
-                "type":"text",
-                "text":formData.codeBlock,
-                "style":{"code":true}
-              }
-            ]
-          }
-        ]
-      },
+      ...createProblemBlock("What is the problem?",formData.problem,'subject'),
+      ...createProblemBlock("What did I expect to happen?",formData.expected,'subject'),
+      ...createProblemBlock("What have I already tried?",formData.tried,'subject'),
+      ...createProblemBlock("Why I suspect its not working",formData.suspect,'subject'),
+      ...createProblemBlock("Zoom Link",formData.zoomLink,'link'),
+      ...createProblemBlock("code",formData.codeBlock,'code')
     ]
   }
   function getData() {
@@ -215,9 +41,11 @@ useEffect(() => {
         "Content-Type": "application/json",
       }
     })
+    setFormData(null);
     
   }
   getData()
+
   
 },[formData])
 
@@ -268,3 +96,134 @@ useEffect(() => {
 }
 
 export default App
+
+
+/*
+{
+  // {
+      //   "type":"section",
+      //   "fields":[
+      //     {
+      //       "type":"mrkdwn",
+      //       "text":formData.tried
+      //     }
+      //   ]
+      // },
+      // {
+      //   "type":"header",
+      //      "text":{
+      //         "type":"plain_text",
+      //         "text": "Why I suspect its not working"
+      //       }
+      // },
+      // {
+      //   "type":"section",
+      //   "fields":[
+      //     {
+      //       "type":"mrkdwn",
+      //       "text":formData.suspect
+      //     }
+      //   ]
+      // },
+      // {
+      //   "type":"rich_text",
+      //   "elements":[
+      //     {
+      //       "type":"rich_text_section",
+      //       "elements":[
+      //         ...divider
+      //       ]
+      //     }
+      //   ]
+      // },
+      // {
+      //   "type":"header",
+      //      "text":{
+      //         "type":"plain_text",
+      //         "text": "Zoom Link"
+      //       }
+      // },
+      // {
+      //   "type":"rich_text",
+      //   "elements":[
+      //     {
+      //       "type":"rich_text_section",
+      //       "elements":[
+      //         ...divider
+      //       ]
+      //     }
+      //   ]
+      // },
+      // {
+      //   "type":"rich_text",
+      //   "elements":[
+      //     {
+      //       "type":"rich_text_section",
+      //       "elements":[
+      //         {
+      //           "type":"link",
+      //           "url":formData.zoomLink
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // },
+      
+      // {
+      //   "type":"header",
+      //      "text":{
+      //         "type":"plain_text",
+      //         "text": "Code Block "
+      //       }
+      // },
+      // {
+      //   "type":"rich_text",
+      //   "elements":[
+      //     {
+      //       "type":"rich_text_section",
+      //       "elements":[
+      //         ...divider
+      //       ]
+      //     }
+      //   ]
+      // },
+      // {
+      //   "type":"rich_text",
+      //   "elements":[
+      //     {
+      //       "type":"rich_text_preformatted",
+      //       "elements":[
+      //         {
+      //           "type":"text",
+      //           "text":formData.codeBlock,
+      //           "style":{"code":true}
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // },
+        "type":"rich_text",
+        "block_id":"block1",
+        "elements":[
+          {
+            "type":"rich_text_list",
+            "elements": [
+              {
+                "type":"rich_text_section",
+                "elements":[
+                  {
+                    "type":"text",
+                    "text":formData.problems
+                  }
+                ]
+              }
+            ],
+            "style":"bullet",
+            "indent": 0,
+            "border": 1
+          },
+          
+        ]
+        
+      },
+*/
