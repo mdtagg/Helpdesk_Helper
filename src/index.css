@@ -13,8 +13,9 @@ body {
   align-items: center;
   padding:2rem;
   font-family: "Roboto", sans-serif;
+  background:slategrey;
   /* background:rgb(74,21,75); */
-  background:url('/pexels-fwstudio-129728.jpg');
+  /* background:url('/pexels-fwstudio-129728.jpg'); */
   /* color:white */
 }
 
@@ -29,7 +30,7 @@ button {
 }
 
 textarea {
-  height:75px;
+  height:60px;
   width:350px;
   padding:0.5rem;
   border:2px solid gray;

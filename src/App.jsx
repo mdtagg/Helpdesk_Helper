@@ -33,20 +33,29 @@ function App() {
     // "https://hooks.slack.com/services/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"
 
     function getData() {
+
+        fetch("https://hooks.slack.com/services/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",{
+          method:"POST",
+          mode:"no-cors",
+          body: JSON.stringify(body),
+          headers: {
+            "Content-Type": "application/json",
+          }
+        })
+        // .then(response => {
+        //   console.log(response)
+        //   return response.json()
+        // }
+        //   )
+        // .catch(error => alert('Error: Malformed request, make sure all fields are filled out correctly'))
+        
       
-      fetch("https://hooks.slack.com/services/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",{
-        method:"POST",
-        mode:"no-cors",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-        }
-      })
-      clearInputs()
-      
-    }
-    getData()
+      // clearInputs()
+      // alert('Message Sent to Slack!')
   }
+  getData()
+}
+
 
   const clearInputs = () => {
     setProblem('')
@@ -83,7 +92,7 @@ function App() {
         <input onChange={(e) => setZoomLink(e.target.value)} value={zoomLink} id="zoomLink" name="zoomLink" required></input>
 
         <label>Code Block</label>
-        <textarea onChange={(e) => setCodeBlock(e.target.value)} value={codeBlock} id="codeBlock" name="codeBlock" placeholder='Paste Code Here'></textarea>
+        <textarea onChange={(e) => setCodeBlock(e.target.value)} value={codeBlock} id="codeBlock" name="codeBlock" placeholder='Paste Code Here' required></textarea>
       </form>
 
       <div className="form-buttons">
