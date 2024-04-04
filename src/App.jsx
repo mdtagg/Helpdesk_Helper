@@ -1,55 +1,64 @@
-import { useEffect,useState } from 'react'
+import { useState } from 'react'
 import populateSlackMarkup from './helpers';
 
 function App() {
 
-  const [ formData, setFormData ] = useState(null);
+  const [ problem,setProblem ] = useState('')
+  const [ expected,setExpected ] = useState('')
+  const [ tried,setTried ] = useState('')
+  const [ suspect,setSuspect ] = useState('')
+  const [ zoomLink,setZoomLink ] = useState('')
+  const [ codeBlock,setCodeBlock ] = useState('')
+
   const { createProblemBlock } = populateSlackMarkup()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const data = {
-      problem:e.target[0].value,
-      expected:e.target[1].value,
-      tried:e.target[2].value,
-      suspect:e.target[3].value,
-      zoomLink:e.target[4].value,
-      codeBlock:e.target[5].value
+
+    const body = {
+      "blocks":[
+        ...createProblemBlock("What is the problem?",problem,'subject'),
+        ...createProblemBlock("What did I expect to happen?",expected,'subject'),
+        ...createProblemBlock("What have I already tried?",tried,'subject'),
+        ...createProblemBlock("Why I suspect its not working",suspect,'subject'),
+        ...createProblemBlock("Zoom Link",zoomLink,'link'),
+        ...createProblemBlock("Code",codeBlock,'code')
+      ]
     }
-    setFormData(data)
+
+    //Mikes testing ground
+    //'https://hooks.slack.com/services/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'
+
+    //WCRI 64
+    // "https://hooks.slack.com/services/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"
+
+    function getData() {
+      
+      fetch("https://hooks.slack.com/services/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",{
+        method:"POST",
+        mode:"no-cors",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      clearInputs()
+      
+    }
+    getData()
   }
 
-useEffect(() => {
-  if(!formData) return;
-
-  const body = {
-    "blocks":[
-      ...createProblemBlock("What is the problem?",formData.problem,'subject'),
-      ...createProblemBlock("What did I expect to happen?",formData.expected,'subject'),
-      ...createProblemBlock("What have I already tried?",formData.tried,'subject'),
-      ...createProblemBlock("Why I suspect its not working",formData.suspect,'subject'),
-      ...createProblemBlock("Zoom Link",formData.zoomLink,'link'),
-      ...createProblemBlock("code",formData.codeBlock,'code')
-    ]
+  const clearInputs = () => {
+    setProblem('')
+    setExpected('')
+    setTried('')
+    setSuspect('')
+    setZoomLink('')
+    setCodeBlock('')
   }
-  function getData() {
-    fetch('https://hooks.slack.com/services/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',{
-      method:"POST",
-      mode:"no-cors",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      }
-    })
-    setFormData(null);
-    
-  }
-  getData()
-
-  
-},[formData])
 
   return (
+  
     <>
       <h1>The Help Desk Helper</h1>
 
@@ -59,22 +68,22 @@ useEffect(() => {
       >
 
         <label htmlFor="problem">What is the problem?</label>
-        <textarea id="problem" name="problem" required></textarea>
+        <textarea onChange={(e) => setProblem(e.target.value)} value={problem} id="problem" name="problem" required></textarea>
 
         <label htmlFor="expected" >What did I expect to happen?</label>
-        <textarea id="expected" name="expected" required></textarea>
+        <textarea onChange={(e) => setExpected(e.target.value)} value={expected} id="expected" name="expected" required></textarea>
 
         <label htmlFor="alreadyTried">What have I already tried?</label>
-        <textarea id="alreadyTried" name="alreadyTried" required></textarea>
+        <textarea onChange={(e) => setTried(e.target.value)} value={tried} id="alreadyTried" name="alreadyTried" required></textarea>
 
         <label htmlFor="suspect">Why I suspect its not working</label>
-        <textarea id="suspect" name="suspect" required></textarea>
+        <textarea onChange={(e) => setSuspect(e.target.value)} value={suspect} id="suspect" name="suspect" required></textarea>
 
         <label htmlFor="zoomLink">Zoom Link</label>
-        <input id="zoomLink" name="zoomLink" required></input>
+        <input onChange={(e) => setZoomLink(e.target.value)} value={zoomLink} id="zoomLink" name="zoomLink" required></input>
 
         <label>Code Block</label>
-        <textarea id="codeBlock" name="codeBlock" placeholder='Paste Code Here'></textarea>
+        <textarea onChange={(e) => setCodeBlock(e.target.value)} value={codeBlock} id="codeBlock" name="codeBlock" placeholder='Paste Code Here'></textarea>
       </form>
 
       <div className="form-buttons">
@@ -89,7 +98,7 @@ useEffect(() => {
           className="clear-button"
         >
             Clear
-          </button>
+        </button>
       </div>
     </>
   )
