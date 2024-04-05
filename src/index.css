@@ -13,9 +13,9 @@ body {
   align-items: center;
   padding:2rem;
   font-family: "Roboto", sans-serif;
-  background:slategrey;
-  /* background:rgb(74,21,75); */
-  /* background:url('/pexels-fwstudio-129728.jpg'); */
+  /* background:slategrey; */
+  /* background:rgba(74,21,75,.8); */
+  background:url('/pexels-fwstudio-129728.jpg');
   /* color:white */
 }
 
@@ -58,6 +58,15 @@ label {
   border-radius:5px;
 }
 
+select {
+  height:30px;
+}
+
+option {
+  text-align: center;
+  border-radius:5px;
+}
+
 #main-form {
   display:flex;
   flex-direction: column;
@@ -73,9 +82,16 @@ label {
 }
 
 .send-button {
+  width:100px;
+  height:40px;
   background:greenyellow;
+  border-radius:5px;
+
 }
 
 .clear-button {
+  width:100px;
+  height:40px;
   background:red;
+  border-radius:5px;
 }

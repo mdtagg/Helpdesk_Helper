@@ -3,6 +3,7 @@ import populateSlackMarkup from './helpers';
 
 function App() {
 
+  const [ priority,setPriority ] = useState('medium')
   const [ problem,setProblem ] = useState('')
   const [ expected,setExpected ] = useState('')
   const [ tried,setTried ] = useState('')
@@ -10,13 +11,17 @@ function App() {
   const [ zoomLink,setZoomLink ] = useState('')
   const [ codeBlock,setCodeBlock ] = useState('')
 
-  const { createProblemBlock } = populateSlackMarkup()
+  const { createProblemBlock,createPriority } = populateSlackMarkup()
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     const body = {
       "blocks":[
+        {
+          "type":"divider"
+        },
+        createPriority(priority),
         ...createProblemBlock("What is the problem?",problem,'subject'),
         ...createProblemBlock("What did I expect to happen?",expected,'subject'),
         ...createProblemBlock("What have I already tried?",tried,'subject'),
@@ -32,6 +37,8 @@ function App() {
     //WCRI 64
     // "https://hooks.slack.com/services/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"
 
+    
+
     function getData() {
 
         fetch("https://hooks.slack.com/services/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",{
@@ -42,22 +49,15 @@ function App() {
             "Content-Type": "application/json",
           }
         })
-        // .then(response => {
-        //   console.log(response)
-        //   return response.json()
-        // }
-        //   )
-        // .catch(error => alert('Error: Malformed request, make sure all fields are filled out correctly'))
-        
-      
+      }
+
       // clearInputs()
-      // alert('Message Sent to Slack!')
-  }
-  getData()
+      getData()
 }
 
 
   const clearInputs = () => {
+    setPriority('medium')
     setProblem('')
     setExpected('')
     setTried('')
@@ -75,6 +75,18 @@ function App() {
         onSubmit={(e) => handleSubmit(e)} 
         id="main-form"
       >
+        <label htmlFor="priority">Priority</label>
+        <select onChange={(e) => setPriority(e.target.value)} value={priority} id="priority" name="priority" required>
+          <option value="low">
+            Low: (Insight or clarification needed, everything working)
+          </option>
+          <option default value="medium">
+           Medium: (Could use some help soon but not urgent)
+          </option>
+          <option value="high">
+            High: (Really stuck, need help asap)
+          </option>
+        </select>
 
         <label htmlFor="problem">What is the problem?</label>
         <textarea onChange={(e) => setProblem(e.target.value)} value={problem} id="problem" name="problem" required></textarea>
@@ -105,6 +117,7 @@ function App() {
         </button>
         <button 
           className="clear-button"
+          onClick={clearInputs}
         >
             Clear
         </button>
@@ -244,4 +257,15 @@ export default App
         ]
         
       },
+
+      // .then(response => {
+        //   console.log(response)
+        //   return response.json()
+        // }
+        //   )
+        // .catch(error => alert('Error: Malformed request, make sure all fields are filled out correctly'))
+        
+      
+      // clearInputs()
+      // alert('Message Sent to Slack!')
 */
