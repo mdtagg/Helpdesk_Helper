@@ -13,43 +13,17 @@ function App() {
     codeBlock:""
   })
 
-  const [ priority,setPriority ] = useState('medium')
-  const [ problem,setProblem ] = useState('')
-  const [ expected,setExpected ] = useState('')
-  const [ tried,setTried ] = useState('')
-  const [ suspect,setSuspect ] = useState('')
-  const [ zoomLink,setZoomLink ] = useState('')
-  const [ codeBlock,setCodeBlock ] = useState('')
-
   const { createProblemBlock,createPriority } = populateSlackMarkup()
 
-  const checkLocalStorage = () => {
-    try {
-      const data = localStorage.getItem('helpDeskHelper')
-      if (data) {
-        const parsedData = JSON.parse(data)
-        setPriority(parsedData.priority)
-        setProblem(parsedData.problem)
-        setExpected(parsedData.expected)
-        setTried(parsedData.tried)
-        setSuspect(parsedData.suspect)
-        setZoomLink(parsedData.zoomLink)
-        setCodeBlock(parsedData.codeBlock)
-      }
-    }
-    catch(err) {
-      console.error(err)
-    }
-  }
-
   const handleChange = (e,type)  => {
+    const localFormData = JSON.parse(localStorage.getItem('helpDeskHelper'))
+    if(!localFormData) localStorage.setItem('helpDeskHelper',JSON.stringify(formData))
 
-    if(!localStorage.getItem('helpDeskHelper')) localStorage.setItem('helpDeskHelper',JSON.stringify(formData));
     const data = JSON.parse(localStorage.getItem('helpDeskHelper'))
     data[type] = e.target.value
     setFormData(data)
     localStorage.setItem("helpDeskHelper",JSON.stringify(data))
-    console.log(JSON.parse(localStorage.getItem('helpDeskHelper')))
+    
   }
 
   const handleSubmit = (e) => {
@@ -90,20 +64,24 @@ function App() {
         })
       }
 
-      // clearInputs()
+      clearInputs()
       getData()
+      alert('Message sent to Slack!')
 }
 
-
-  const clearInputs = () => {
-    setPriority('medium')
-    setProblem('')
-    setExpected('')
-    setTried('')
-    setSuspect('')
-    setZoomLink('')
-    setCodeBlock('')
+const clearInputs = () => {
+  const resetFormData = {
+    priority:"medium",
+    problem:"",
+    expected:"",  
+    tried:"",
+    suspect:"",
+    zoomLink:"",
+    codeBlock:""
   }
+  setFormData(resetFormData)
+  localStorage.removeItem('helpDeskHelper')
+}
 
   return (
   
