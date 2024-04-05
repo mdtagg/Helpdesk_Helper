@@ -3,6 +3,16 @@ import populateSlackMarkup from './helpers';
 
 function App() {
 
+  const [ formData, setFormData ] = useState({
+    priority:"medium",
+    problem:"",
+    expected:"",
+    tried:"",
+    suspect:"",
+    zoomLink:"",
+    codeBlock:""
+  })
+
   const [ priority,setPriority ] = useState('medium')
   const [ problem,setProblem ] = useState('')
   const [ expected,setExpected ] = useState('')
@@ -13,6 +23,35 @@ function App() {
 
   const { createProblemBlock,createPriority } = populateSlackMarkup()
 
+  const checkLocalStorage = () => {
+    try {
+      const data = localStorage.getItem('helpDeskHelper')
+      if (data) {
+        const parsedData = JSON.parse(data)
+        setPriority(parsedData.priority)
+        setProblem(parsedData.problem)
+        setExpected(parsedData.expected)
+        setTried(parsedData.tried)
+        setSuspect(parsedData.suspect)
+        setZoomLink(parsedData.zoomLink)
+        setCodeBlock(parsedData.codeBlock)
+      }
+    }
+    catch(err) {
+      console.error(err)
+    }
+  }
+
+  const handleChange = (e,type)  => {
+
+    if(!localStorage.getItem('helpDeskHelper')) localStorage.setItem('helpDeskHelper',JSON.stringify(formData));
+    const data = JSON.parse(localStorage.getItem('helpDeskHelper'))
+    data[type] = e.target.value
+    setFormData(data)
+    localStorage.setItem("helpDeskHelper",JSON.stringify(data))
+    console.log(JSON.parse(localStorage.getItem('helpDeskHelper')))
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -21,13 +60,13 @@ function App() {
         {
           "type":"divider"
         },
-        createPriority(priority),
-        ...createProblemBlock("What is the problem?",problem,'subject'),
-        ...createProblemBlock("What did I expect to happen?",expected,'subject'),
-        ...createProblemBlock("What have I already tried?",tried,'subject'),
-        ...createProblemBlock("Why I suspect its not working",suspect,'subject'),
-        ...createProblemBlock("Zoom Link",zoomLink,'link'),
-        ...createProblemBlock("Code",codeBlock,'code')
+        createPriority(formData.priority),
+        ...createProblemBlock("What is the problem?",formData.problem,'subject'),
+        ...createProblemBlock("What did I expect to happen?",formData.expected,'subject'),
+        ...createProblemBlock("What have I already tried?",formData.tried,'subject'),
+        ...createProblemBlock("Why I suspect its not working",formData.suspect,'subject'),
+        ...createProblemBlock("Zoom Link",formData.zoomLink,'link'),
+        ...createProblemBlock("Code",formData.codeBlock,'code')
       ]
     }
 
@@ -76,7 +115,7 @@ function App() {
         id="main-form"
       >
         <label htmlFor="priority">Priority</label>
-        <select onChange={(e) => setPriority(e.target.value)} value={priority} id="priority" name="priority" required>
+        <select onChange={(e) => handleChange(e,'priority')} value={formData.priority} id="priority" name="priority" required>
           <option value="low">
             Low: (Insight or clarification needed, everything working)
           </option>
@@ -89,22 +128,22 @@ function App() {
         </select>
 
         <label htmlFor="problem">What is the problem?</label>
-        <textarea onChange={(e) => setProblem(e.target.value)} value={problem} id="problem" name="problem" required></textarea>
+        <textarea onChange={(e) => handleChange(e,'problem')} value={formData.problem} id="problem" name="problem" required></textarea>
 
         <label htmlFor="expected" >What did I expect to happen?</label>
-        <textarea onChange={(e) => setExpected(e.target.value)} value={expected} id="expected" name="expected" required></textarea>
+        <textarea onChange={(e) => handleChange(e,'expected')} value={formData.expected} id="expected" name="expected" required></textarea>
 
         <label htmlFor="alreadyTried">What have I already tried?</label>
-        <textarea onChange={(e) => setTried(e.target.value)} value={tried} id="alreadyTried" name="alreadyTried" required></textarea>
+        <textarea onChange={(e) => handleChange(e,'tried')} value={formData.tried} id="alreadyTried" name="alreadyTried" required></textarea>
 
         <label htmlFor="suspect">Why I suspect its not working</label>
-        <textarea onChange={(e) => setSuspect(e.target.value)} value={suspect} id="suspect" name="suspect" required></textarea>
+        <textarea onChange={(e) => handleChange(e,'suspect')} value={formData.suspect} id="suspect" name="suspect" required></textarea>
 
         <label htmlFor="zoomLink">Zoom Link</label>
-        <input onChange={(e) => setZoomLink(e.target.value)} value={zoomLink} id="zoomLink" name="zoomLink" required></input>
+        <input onChange={(e) => handleChange(e,'zoomLink')} value={formData.zoomLink} id="zoomLink" name="zoomLink" required></input>
 
         <label>Code Block</label>
-        <textarea onChange={(e) => setCodeBlock(e.target.value)} value={codeBlock} id="codeBlock" name="codeBlock" placeholder='Paste Code Here' required></textarea>
+        <textarea onChange={(e) => handleChange(e,'codeBlock')} value={formData.codeBlock} id="codeBlock" name="codeBlock" placeholder='Paste Code Here' required></textarea>
       </form>
 
       <div className="form-buttons">
