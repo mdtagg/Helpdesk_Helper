@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import populateSlackMarkup from './helpers';
 
 function App() {
@@ -82,6 +82,12 @@ const clearInputs = () => {
   setFormData(resetFormData)
   localStorage.removeItem('helpDeskHelper')
 }
+
+useEffect(() => {
+  const localFormData = JSON.parse(localStorage.getItem('helpDeskHelper'))
+  if(localFormData) setFormData(localFormData);
+  else localStorage.setItem('helpDeskHelper',JSON.stringify(formData));
+},[])
 
   return (
   
