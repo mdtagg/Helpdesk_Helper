@@ -1,8 +1,10 @@
 import { useState,useEffect } from 'react'
 import populateSlackMarkup from './helpers';
+import { WHURL } from '../secrets';
 
 function App() {
 
+  console.log(WHURL)
   const [ formData, setFormData ] = useState({
     priority:"medium",
     problem:"",
@@ -44,17 +46,9 @@ function App() {
       ]
     }
 
-    //Mikes testing ground
-    //'https://hooks.slack.com/services/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'
-
-    //WCRI 64
-    // "https://hooks.slack.com/services/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"
-
-    
-
     function getData() {
 
-        fetch("https://hooks.slack.com/services/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",{
+        fetch(WHURL,{
           method:"POST",
           mode:"no-cors",
           body: JSON.stringify(body),
