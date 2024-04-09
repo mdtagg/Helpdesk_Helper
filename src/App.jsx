@@ -1,10 +1,9 @@
 import { useState,useEffect } from 'react'
 import populateSlackMarkup from './helpers';
-import { WHURL } from '../secrets';
+import axios from 'axios';
 
 function App() {
 
-  console.log(WHURL)
   const [ formData, setFormData ] = useState({
     priority:"medium",
     problem:"",
@@ -46,21 +45,21 @@ function App() {
       ]
     }
 
-    function getData() {
+  const fetchData = async() => {
+    await fetch("http://localhost:3000", {
+      method:'POST',
+      mode:"cors",
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify(body)
+    })
+  }
+  fetchData()
 
-        fetch(WHURL,{
-          method:"POST",
-          mode:"no-cors",
-          body: JSON.stringify(body),
-          headers: {
-            "Content-Type": "application/json",
-          }
-        })
-      }
-
-      clearInputs()
-      getData()
-      alert('Message sent to Slack!')
+  // clearInputs()
+  // getData()
+  alert('Message sent to Slack!')
 }
 
 const clearInputs = () => {
@@ -78,6 +77,7 @@ const clearInputs = () => {
 }
 
 useEffect(() => {
+  
   const localFormData = JSON.parse(localStorage.getItem('helpDeskHelper'))
   if(localFormData) setFormData(localFormData);
   else localStorage.setItem('helpDeskHelper',JSON.stringify(formData));
@@ -144,145 +144,3 @@ useEffect(() => {
 }
 
 export default App
-
-
-/*
-{
-  // {
-      //   "type":"section",
-      //   "fields":[
-      //     {
-      //       "type":"mrkdwn",
-      //       "text":formData.tried
-      //     }
-      //   ]
-      // },
-      // {
-      //   "type":"header",
-      //      "text":{
-      //         "type":"plain_text",
-      //         "text": "Why I suspect its not working"
-      //       }
-      // },
-      // {
-      //   "type":"section",
-      //   "fields":[
-      //     {
-      //       "type":"mrkdwn",
-      //       "text":formData.suspect
-      //     }
-      //   ]
-      // },
-      // {
-      //   "type":"rich_text",
-      //   "elements":[
-      //     {
-      //       "type":"rich_text_section",
-      //       "elements":[
-      //         ...divider
-      //       ]
-      //     }
-      //   ]
-      // },
-      // {
-      //   "type":"header",
-      //      "text":{
-      //         "type":"plain_text",
-      //         "text": "Zoom Link"
-      //       }
-      // },
-      // {
-      //   "type":"rich_text",
-      //   "elements":[
-      //     {
-      //       "type":"rich_text_section",
-      //       "elements":[
-      //         ...divider
-      //       ]
-      //     }
-      //   ]
-      // },
-      // {
-      //   "type":"rich_text",
-      //   "elements":[
-      //     {
-      //       "type":"rich_text_section",
-      //       "elements":[
-      //         {
-      //           "type":"link",
-      //           "url":formData.zoomLink
-      //         }
-      //       ]
-      //     }
-      //   ]
-      // },
-      
-      // {
-      //   "type":"header",
-      //      "text":{
-      //         "type":"plain_text",
-      //         "text": "Code Block "
-      //       }
-      // },
-      // {
-      //   "type":"rich_text",
-      //   "elements":[
-      //     {
-      //       "type":"rich_text_section",
-      //       "elements":[
-      //         ...divider
-      //       ]
-      //     }
-      //   ]
-      // },
-      // {
-      //   "type":"rich_text",
-      //   "elements":[
-      //     {
-      //       "type":"rich_text_preformatted",
-      //       "elements":[
-      //         {
-      //           "type":"text",
-      //           "text":formData.codeBlock,
-      //           "style":{"code":true}
-      //         }
-      //       ]
-      //     }
-      //   ]
-      // },
-        "type":"rich_text",
-        "block_id":"block1",
-        "elements":[
-          {
-            "type":"rich_text_list",
-            "elements": [
-              {
-                "type":"rich_text_section",
-                "elements":[
-                  {
-                    "type":"text",
-                    "text":formData.problems
-                  }
-                ]
-              }
-            ],
-            "style":"bullet",
-            "indent": 0,
-            "border": 1
-          },
-          
-        ]
-        
-      },
-
-      // .then(response => {
-        //   console.log(response)
-        //   return response.json()
-        // }
-        //   )
-        // .catch(error => alert('Error: Malformed request, make sure all fields are filled out correctly'))
-        
-      
-      // clearInputs()
-      // alert('Message Sent to Slack!')
-*/
