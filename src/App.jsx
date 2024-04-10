@@ -57,8 +57,7 @@ function App() {
   }
   fetchData()
 
-  // clearInputs()
-  // getData()
+  clearInputs()
   alert('Message sent to Slack!')
 }
 
